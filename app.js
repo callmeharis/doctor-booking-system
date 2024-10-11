@@ -11,6 +11,7 @@ const rateLimiter = require("express-rate-limit");
 
 // routers
 const adminRouter = require("./routes/admin");
+const doctorRouter = require("./routes/doctor");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -29,6 +30,7 @@ app.use(xss());
 
 // routes
 app.use("/api/v1", adminRouter);
+app.use("/api/v1/doctor", auth, doctorRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
