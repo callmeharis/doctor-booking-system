@@ -38,5 +38,11 @@ const login = async (req, res) => {
     },
   });
 };
+const logout = (req, res) => {
+  // Invalidate the JWT token client-side (e.g., remove it from localStorage or cookies)
+  res.status(200).json({
+    message: "Successfully logged out",
+  });
+};
 
-module.exports = { register, login };
+module.exports = { register, login, logout };

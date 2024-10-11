@@ -1,6 +1,7 @@
 const { UnauthenticatedError } = require("../errors");
 const jwt = require("jsonwebtoken");
-// const User = require('../models/User')
+const User = require("../models/User");
+const { StatusCodes } = require("http-status-codes");
 
 const auth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -15,6 +16,15 @@ const auth = async (req, res, next) => {
     // res.user = user // next line is alternate version of these two lines
     // attach the user to the job routes
     req.user = { userId: payload.userId, name: payload.name };
+
+    // fetch user and verify their role
+    const user = await User.findById(req.user.userId);
+    if (!user || user.userType !== "Admin") {
+      console.log("user", user.userType);
+      return res.status(StatusCodes.FORBIDDEN).json({
+        message: "Access denied. Admins only",
+      });
+    }
     next();
   } catch (error) {
     throw new UnauthenticatedError("Authentication invalid");
