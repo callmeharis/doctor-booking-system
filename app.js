@@ -4,6 +4,14 @@ const express = require("express");
 const connectDB = require("./db/connect");
 const app = express();
 
+// extra security packages
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const rateLimiter = require("express-rate-limit");
+
+// routers
+const adminRouter = require("./routes/admin");
+
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -18,6 +26,9 @@ app.use(
 );
 app.use(helmet());
 app.use(xss());
+
+// routes
+app.use("/api/v1", adminRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
